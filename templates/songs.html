@@ -1,0 +1,101 @@
+{% extends 'base.html' %}
+
+{% block title %}
+<section class="py-5 text-center container">
+  <div class="row py-lg-5">
+    <div class="col-lg-6 col-md-8 mx-auto">
+      <h1 class="fw-light">Пісні</h1>
+      <p class="lead text-muted">{{subtitle}}</p>
+      <p>
+        <a href="/upload" class="btn btn-primary my-2">Додати нову пісню</a>
+      </p>
+    </div>
+  </div>
+
+  <form method="post">
+    <div class="form-group">
+        <label class='form-label' for="song_query">Пошук пісні</label>
+        <input type="text" name="song_query"
+               placeholder="Назва чи виконавець..." class="form-control">
+        </input>
+    </div>
+    <div class="form-group">
+      <button type="submit" class="btn btn-primary">Знайти</button>
+  </div>
+  </form>
+</section>
+{% endblock %}
+
+
+
+{% block content %}
+  {% for song in songs %}
+  <div class='track' style="margin-bottom: 20px;"> 
+      <!--загальна інформація про пісню-->
+      <h3>{{song.name}}</h3>
+      <h5>{{song.performer_name}}</h5>
+      {% if song.album_name %}
+      <h6>{{song.album_name}}</h6>
+      {% endif %}
+      <audio controls>
+        <source src="{{ url_for('static', filename= 'music/' + song.audio_file) }}" type='audio/mpeg'>
+      </audio>
+    
+    <!--кнопки "Додати в плейліст", "Редагувати", "Видалити"-->
+    <div class="btn-group" style='float:right;'>
+      <button type="button" class="btn btn-primary dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false" style='margin:5px'>
+        Додати в плейліст</button>
+      <ul class="dropdown-menu">
+        <li><a class="dropdown-item" href="{{url_for('add_to_playlist', playlist_name='Улюблене', song_name=song.name, performer_name=song.performer_name)}}">
+          Улюблене</a></li>
+        <li><hr class="dropdown-divider"></li>
+        {% for playlist in all_playlists %}
+          {% if playlist.name != 'Улюблене' %}
+            <li><a class="dropdown-item" href="{{url_for('add_to_playlist', playlist_name=playlist.name, song_name=song.name, performer_name=song.performer_name)}}">
+              {{playlist.name}}</a></li>
+          {% endif %}
+          <!--
+          <a href="" style='margin:5px' class="btn btn-danger my-2">Видалити з плейлісту</a>
+          -->
+        {% endfor %}
+      </ul>
+      {% if song.owner_id == user_id %}
+      <a href="{{url_for( 'update_song', name=song['name'], performer_name=song['performer_name'] )}}" style='margin:5px'
+      class="btn btn-secondary my-2">Редагувати</a>
+
+<!--
+      <a href="{{url_for( 'delete_song', name=song['name'], performer_name=song['performer_name'] )}}" style='margin:5px'
+      class="btn btn-danger my-2">Видалити</a>
+-->
+      <!-- Button trigger modal -->
+      <button type="button" class="btn btn-danger my-2" data-bs-toggle="modal" data-bs-target="#song_{{loop.index0}}" style='margin:5px'>
+        Видалити
+      </button>
+
+      <!-- Modal -->
+      <div class="modal fade" id="song_{{loop.index0}}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="exampleModalLabel">Ви впевнені?</h5>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+              Видалити пісню <strong>{{song.name}} - {{song.performer_name}}</strong>?
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Ні</button>
+              <a role="button" class="btn btn-primary" href="{{url_for( 'delete_song', name=song['name'], performer_name=song['performer_name'] )}}">Так</a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+
+      {% endif %}
+    </div>
+
+  </div>
+  <hr/>
+  {% endfor %}
+{% endblock %}

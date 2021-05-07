@@ -1,0 +1,97 @@
+{% extends 'base.html' %}
+
+{% block title %}
+<section class="py-5 text-center container">
+  <div class="row py-lg-5">
+    <div class="col-lg-6 col-md-8 mx-auto">
+      <h1 class="fw-light">Плейлісти</h1>
+      <p class="lead text-muted">{{subtitle}}</p>
+    </div>
+  </div>
+</section>
+{% endblock %}
+
+
+
+{% block content %}
+<section class="row row-cols-1 row-cols-sm-2 row-cols-md-2 g-3">
+  <div>
+    <h2>Пошук плейліста</h2>
+    <form method="post">
+      <div class="mb-3">
+          <input type="text" name="playlist_query"
+                placeholder="Назва плейлісту..." class="form-control">
+          </input>
+      </div>
+      <div class="form-group">
+        <button type="submit" class="btn btn-primary">Знайти</button>
+    </div>
+    </form>
+  </div>
+
+  <div>
+    <h2>Створити новий плейліст</h2>
+    <form method="post" action='/create_playlist'>
+      <div class="mb-3">
+          <input type="text" name="playlist_name" class="form-control" placeholder="Назва плейлісту...">
+      </div>
+      <div class="form-group">
+        <button type="submit" class="btn btn-primary">Створити</button>
+    </div>
+    </form>
+  </div>
+</section>
+<hr/>
+
+
+
+<div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3" style="margin-top:40px">
+  {% for playlist in playlists %}
+    <div class="col">
+      <div class="card shadow-sm">
+        <svg class="bd-placeholder-img card-img-top" width="100%" height="225" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Placeholder: Thumbnail" preserveAspectRatio="xMidYMid slice" focusable="false"><title>Placeholder</title><rect width="100%" height="100%" fill="#55595c"/>
+          <text x="50%" y="50%" fill="#eceeef" dy=".3em">{{playlist.name}}</text></svg>
+
+        <div class="card-body">
+          <p class="card-text">Автор: {{playlist.owner.name}}</p>
+          <p class="card-text">Пісень: {{playlist.songs|length}}</p>
+          <div class="d-flex justify-content-between align-items-center">
+            <div class="btn-group">
+              <!--кнопки "Відкрити" та "Видалити"-->
+              <a href="{{url_for('show_playlist_content', owner_id=playlist.owner_id, playlist_name=playlist.name)}}" 
+                class="btn btn-sm btn-outline-secondary">Відкрити</a>
+              {% if playlist.name != 'Улюблене' and playlist.owner_id == user_id%}
+              <button type="button" class="btn btn-sm btn-outline-danger" data-bs-toggle="modal" data-bs-target="#playlist_{{loop.index0}}">
+                Видалити
+              </button>
+              <div class="modal fade" id="playlist_{{loop.index0}}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                  <div class="modal-content">
+                    <div class="modal-header">
+                      <h5 class="modal-title" id="exampleModalLabel">Ви впевнені?</h5>
+                      <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                      Видалити плейліст <strong>{{playlist.name}}</strong>?
+                    </div>
+                    <div class="modal-footer">
+                      <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Ні</button>
+                      <a role="button" class="btn btn-primary" href="{{url_for('delete_playlist', playlist_name=playlist.name)}}">Так</a>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              {% endif %}
+            </div>
+            <!---
+            <small class="text-muted">9 mins</small>
+            -->
+          </div>
+        </div>
+      </div>
+    </div>
+
+  
+  {% endfor %}
+</div>
+{% endblock %}

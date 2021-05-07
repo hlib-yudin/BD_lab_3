@@ -1,0 +1,37 @@
+{% extends 'base.html' %}
+
+{% block title %}
+<section class="py-5 text-center container">
+  <div class="row py-lg-5">
+    <div class="col-lg-6 col-md-8 mx-auto">
+      <h1 class="fw-light">Редагувати пісню</h1>
+      <p class="lead text-muted">Помилилися в даних про пісню? З ким не буває!</p>
+    </div>
+  </div>
+</section>
+{% endblock %}
+
+{% block content %}
+<form method="post">
+    <div class="mb-3">
+        <label for="song_name" class="form-label">Назва пісні</label>
+        <input type="text" name="song_name" class="form-control" value="{{song.name}}">
+    </div>
+    <div class="mb-3">
+        <label for="performer_name" class="form-label">Виконавець</label>
+        <input type="text" name="performer_name" class="form-control" value="{{song.performer_name}}">
+    </div>
+    <div class="mb-3">
+        <label for="album_name" class="form-label">Альбом</label>
+        {% if song.album_name == None %}
+        <input type="text" name="album_name" class="form-control">
+        {% else %}
+        <input type="text" name="album_name" class="form-control" value="{{song.album_name}}">
+        {% endif %}
+    </div>
+
+    <div class="form-group">
+      <button type="submit" class="btn btn-primary">Зберегти зміни</button>
+    </div>
+</form>
+{% endblock %}

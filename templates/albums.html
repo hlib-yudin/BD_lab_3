@@ -1,0 +1,63 @@
+{% extends 'base.html' %}
+
+{% block title %}
+<section class="py-5 text-center container">
+  <div class="row py-lg-5">
+    <div class="col-lg-6 col-md-8 mx-auto">
+      <h1 class="fw-light">Альбоми</h1>
+      <p class="lead text-muted">{{subtitle}}</p>
+    </div>
+  </div>
+</section>
+{% endblock %}
+
+
+
+{% block content %}
+<section class="row row-cols-1 row-cols-sm-2 row-cols-md-2 g-3">
+  <div>
+    <h2>Пошук альбому</h2>
+    <form method="post">
+      <div class="mb-3">
+          <input type="text" name="album_query"
+                placeholder="Назва альбому..." class="form-control">
+          </input>
+      </div>
+      <div class="form-group">
+        <button type="submit" class="btn btn-primary">Знайти</button>
+    </div>
+    </form>
+  </div>
+</section>
+<hr/>
+
+
+
+<div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3" style="margin-top:40px">
+  {% for album in albums %}
+    <div class="col">
+      <div class="card shadow-sm">
+        <svg class="bd-placeholder-img card-img-top" width="100%" height="225" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Placeholder: Thumbnail" preserveAspectRatio="xMidYMid slice" focusable="false"><title>Placeholder</title><rect width="100%" height="100%" fill="#55595c"/>
+          <text x="50%" y="50%" fill="#eceeef" dy=".3em">{{album.name}}</text></svg>
+
+        <div class="card-body">
+          <p class="card-text">Виконавець: {{album.performer_name}}</p>
+          <p class="card-text">Пісень: {{album.songs|length}}</p>
+          <div class="d-flex justify-content-between align-items-center">
+            <div class="btn-group">
+              <!--кнопки "Відкрити" та "Видалити"-->
+              <a href="{{url_for('show_album_content', performer_name=album.performer_name, album_name=album.name)}}" 
+                class="btn btn-sm btn-outline-secondary">Відкрити</a>
+            </div>
+            <!---
+            <small class="text-muted">9 mins</small>
+            -->
+          </div>
+        </div>
+      </div>
+    </div>
+
+  
+  {% endfor %}
+</div>
+{% endblock %}

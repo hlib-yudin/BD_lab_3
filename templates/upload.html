@@ -1,0 +1,38 @@
+{% extends 'base.html' %}
+
+{% block title %}
+<section class="py-5 text-center container">
+  <div class="row py-lg-5">
+    <div class="col-lg-6 col-md-8 mx-auto">
+      <h1 class="fw-light">Додати пісню</h1>
+      <p class="lead text-muted">Поповніть колекцію пісень Replay новими треками!</p>
+    </div>
+  </div>
+</section>
+{% endblock %}
+
+{% block content %}
+<form method="post" enctype='multipart/form-data'>
+    <div class="mb-3">
+        <label for="song_name" class="form-label">Назва пісні</label>
+        <input type="text" name="song_name" class="form-control">
+    </div>
+    <div class="mb-3">
+        <label for="performer_name" class="form-label">Виконавець</label>
+        <input type="text" name="performer_name" class="form-control">
+    </div>
+    <div class="mb-3">
+        <label for="album_name" class="form-label">Альбом</label>
+        <input type="text" name="album_name" class="form-control">
+    </div>
+    <div class="mb-3">
+        <label class="form-label" for="music_file">Файл</label>
+        <input type="file" class="form-control" name="music_file">
+    </div>
+
+
+    <div class="form-group">
+      <button type="submit" class="btn btn-primary">Додати</button>
+  </div>
+  </form>
+{% endblock %}

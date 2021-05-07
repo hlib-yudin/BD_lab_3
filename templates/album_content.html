@@ -1,0 +1,60 @@
+{% extends 'base.html' %}
+
+{% block title %}
+<section class="py-5 text-center container">
+  <div class="row py-lg-5">
+    <div class="col-lg-6 col-md-8 mx-auto">
+      <h1 class="fw-light">Альбом `{{album.name}}`</h1>
+      <p class="lead text-muted">Виконавець: {{album.performer_name}}</p>
+    </div>
+  </div>
+</section>
+{% endblock %}
+
+
+
+{% block content %}
+  {% for song in songs %}
+  <div class='track' style="margin-bottom: 20px;"> 
+    <h3>{{song.name}}</h3>
+    <h5>{{song.performer_name}}</h5>
+    {% if song.album_name %}
+    <h6>{{song.album_name}}</h6>
+    {% endif %}
+    <audio controls>
+      <source src="{{ url_for('static', filename= 'music/' + song.audio_file) }}" type='audio/mpeg'>
+    </audio>
+
+
+    <div class="btn-group" style='float:right;'>
+      <button type="button" class="btn btn-primary dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false" style='margin:5px'>
+        Додати в плейліст</button>
+      <ul class="dropdown-menu">
+        <li><a class="dropdown-item" href="{{url_for('add_to_playlist', playlist_name='Улюблене', song_name=song.name, performer_name=song.performer_name)}}">
+          Улюблене</a></li>
+        <li><hr class="dropdown-divider"></li>
+        {% for playlist in all_playlists %}
+          {% if playlist.name != 'Улюблене' %}
+            <li><a class="dropdown-item" href="{{url_for('add_to_playlist', playlist_name=playlist.name, song_name=song.name, performer_name=song.performer_name)}}">
+              {{playlist.name}}</a></li>
+          {% endif %}
+          <!--
+          <a href="" style='margin:5px' class="btn btn-danger my-2">Видалити з плейлісту</a>
+          -->
+        {% endfor %}
+      </ul>
+
+    </div>
+    <!--
+      видалити з плейлісту!!!!!!!!!!!!
+
+    <a href="{{url_for( 'delete_song', name=song['name'], performer_name=song['performer_name'] )}}" 
+    class="btn btn-primary my-2" style='float:right'>Видалити</a>
+    <a href="{{url_for( 'update_song', name=song['name'], performer_name=song['performer_name'] )}}" 
+    class="btn btn-primary my-2" style='float:right'>Редагувати</a>
+    -->
+    
+  </div>
+  <hr/>
+  {% endfor %}
+{% endblock %}
